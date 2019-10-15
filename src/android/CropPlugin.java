@@ -29,6 +29,7 @@ public class CropPlugin extends CordovaPlugin {
           JSONObject options = args.getJSONObject(1);
           int targetWidth = options.getInt("targetWidth");
           int targetHeight = options.getInt("targetHeight");
+          double cropAspectRatio = options.optDouble("cropAspectRatio", 1);
 
           this.inputUri = Uri.parse(imagePath);
           this.outputUri = Uri.fromFile(new File(getTempDirectoryPath() + "/" + System.currentTimeMillis()+ "-cropped.jpg"));
@@ -47,6 +48,9 @@ public class CropPlugin extends CordovaPlugin {
               }
           } else {
               crop.asSquare();
+          }
+          if (cropAspectRatio != 1) {
+              crop.withAspect(100, (int)(100 * cropAspectRatio));
           }
           crop.start(cordova.getActivity());
           return true;
